@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой Трекер Привычек</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 60px 20px 40px;
+            color: white;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 20px rgba(0,0,0,0.2);
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .hero p {
+            font-size: 1.3em;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        /* Tracker Cards */
+        .tracker-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 35px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .tracker-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .tracker-card h2 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .tracker-card h2 .icon {
+            font-size: 1.5em;
+        }
+
+        /* Water Tracker */
+        .water-tracker h2 { color: #00b4d8; }
+        
+        .water-display {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .water-amount {
+            font-size: 3em;
+            font-weight: bold;
+            color: #00b4d8;
+        }
+
+        .water-goal {
+            font-size: 1.1em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .water-progress {
+            width: 100%;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .water-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00b4d8, #0077b6);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .water-progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .water-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .water-btn {
+            padding: 15px;
+            border: none;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #00b4d8, #0077b6);
+            color: white;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,180,216,0.3);
+        }
+
+        .water-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,180,216,0.5);
+        }
+
+        .water-btn:active {
+            transform: translateY(0);
+        }
+
+        .water-btn.reset {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            box-shadow: 0 5px 15px rgba(255,107,107,0.3);
+        }
+
+        .water-btn.reset:hover {
+            box-shadow: 0 8px 20px rgba(255,107,107,0.5);
+        }
+
+        /* Savings Tracker */
+        .savings-tracker h2 { color: #52b788; }
+
+        .savings-display {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .savings-amount {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #52b788;
+        }
+
+        .savings-goal {
+            font-size: 1.1em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .savings-progress {
+            width: 100%;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .savings-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #52b788, #40916c);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .savings-input-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .savings-input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            font-size: 1.1em;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .savings-input:focus {
+            border-color: #52b788;
+        }
+
+        .savings-btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #52b788, #40916c);
+            color: white;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(82,183,136,0.3);
+        }
+
+        .savings-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(82,183,136,0.5);
+        }
+
+        .savings-btn.reset {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            box-shadow: 0 5px 15px rgba(255,107,107,0.3);
+        }
+
+        /* Running Tracker */
+        .running-tracker h2 { color: #f77f00; }
+
+        .running-schedule {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin: 30px 0;
+        }
+
+        .day-card {
+            text-align: center;
+            padding: 15px 5px;
+            border-radius: 15px;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+
+        .day-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .day-card.active {
+            background: linear-gradient(135deg, #f77f00, #fcbf49);
+            color: white;
+            border-color: #f77f00;
+            box-shadow: 0 5px 15px rgba(247,127,0,0.3);
+        }
+
+        .day-card .day-name {
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .day-card .day-icon {
+            font-size: 1.5em;
+        }
+
+        .running-stats {
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            border-radius: 15px;
+        }
+
+        .running-stats .count {
+            font-size: 2em;
+            font-weight: bold;
+            color: #f77f00;
+        }
+
+        .running-stats .label {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .stats-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 35px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .stats-card h2 {
+            font-size: 2em;
+            color: #667eea;
+            margin-bottom: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+        }
+
+        .stat-item {
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: scale(1.05);
+        }
+
+        .stat-item .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .stat-item .stat-label {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        /* Success Message */
+        .success-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 40px 60px;
+            border-radius: 25px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+            z-index: 1000;
+            display: none;
+            animation: popIn 0.5s ease-out;
+            text-align: center;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        @keyframes popIn {
+            0% { transform: translate(-50%, -50%) scale(0); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .success-message h3 {
+            font-size: 2em;
+            color: #52b788;
+            margin-bottom: 15px;
+        }
+
+        .success-message p {
+            font-size: 1.2em;
+            color: #666;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5em; }
+            .container { grid-template-columns: 1fr; }
+            .running-schedule { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #f00;
+            position: absolute;
+            animation: confetti-fall 3s linear forwards;
+            z-index: 999;
+        }
+
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1> Мой Трекер Привычек</h1>
+        <p>Следи за своими целями каждый день!</p>
+    </div>
+
+    <!-- Main Trackers -->
+    <div class="container">
+        <!-- Water Tracker -->
+        <div class="tracker-card water-tracker">
+            <h2><span class="icon">💧</span> Вода</h2>
+            <div class="water-display">
+                <div class="water-amount" id="waterAmount">0 мл</div>
+                <div class="water-goal">Цель: 2500 мл</div>
+            </div>
+            <div class="water-progress">
+                <div class="water-progress-bar" id="waterProgress" style="width: 0%"></div>
+            </div>
+            <div class="water-buttons">
+                <button class="water-btn" onclick="addWater(250)">+250 мл</button>
+                <button class="water-btn" onclick="addWater(500)">+500 мл</button>
+                <button class="water-btn" onclick="addWater(750)">+750 мл</button>
+                <button class="water-btn" onclick="addWater(1000)">+1000 мл</button>
+                <button class="water-btn reset" onclick="resetWater()">Сбросить</button>
+            </div>
+        </div>
+
+        <!-- Savings Tracker -->
+        <div class="tracker-card savings-tracker">
+            <h2><span class="icon">💰</span> Накопления</h2>
+            <div class="savings-display">
+                <div class="savings-amount" id="savingsAmount">0 ₽</div>
+                <div class="savings-goal">Цель: 1 000 000 ₽</div>
+            </div>
+            <div class="savings-progress">
+                <div class="savings-progress-bar" id="savingsProgress" style="width: 0%"></div>
+            </div>
+            <div class="savings-input-group">
+                <input type="number" class="savings-input" id="savingsInput" placeholder="Сумма в рублях">
+                <button class="savings-btn" onclick="addSavings()">Добавить</button>
+            </div>
+            <button class="savings-btn reset" onclick="resetSavings()" style="width: 100%; margin-top: 15px;">Сбросить</button>
+        </div>
+
+        <!-- Running Tracker -->
+        <div class="tracker-card running-tracker">
+            <h2><span class="icon">🏃</span> Бег</h2>
+            <p style="color: #666; margin-bottom: 20px;">Нажми на день, когда пробежал</p>
+            <div class="running-schedule" id="runningSchedule">
+                <div class="day-card" data-day="0">
+                    <div class="day-name">Пн</div>
+                    <div class="day-icon"></div>
+                </div>
+                <div class="day-card" data-day="1">
+                    <div class="day-name">Вт</div>
+                    <div class="day-icon">🏃</div>
+                </div>
+                <div class="day-card" data-day="2">
+                    <div class="day-name">Ср</div>
+                    <div class="day-icon">🏃</div>
+                </div>
+                <div class="day-card" data-day="3">
+                    <div class="day-name">Чт</div>
+                    <div class="day-icon">🏃</div>
+                </div>
+                <div class="day-card" data-day="4">
+                    <div class="day-name">Пт</div>
+                    <div class="day-icon">🏃</div>
+                </div>
+                <div class="day-card" data-day="5">
+                    <div class="day-name">Сб</div>
+                    <div class="day-icon">🏃</div>
+                </div>
+                <div class="day-card" data-day="6">
+                    <div class="day-name">Вс</div>
+                    <div class="day-icon">🏃</div>
+                </div>
+            </div>
+            <div class="running-stats">
+                <div class="count" id="runningCount">0</div>
+                <div class="label">дней пробежек на этой неделе</div>
+                <div class="label" style="margin-top: 10px; font-size: 0.9em;">Цель: 3 раза в неделю</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="stats-section">
+        <div class="stats-card">
+            <h2>📊 Общая статистика</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value" id="statWater" style="color: #00b4d8;">0%</div>
+                    <div class="stat-label">Воды выпито сегодня</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="statSavings" style="color: #52b788;">0%</div>
+                    <div class="stat-label">Накоплено от цели</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="statRunning" style="color: #f77f00;">0/3</div>
+                    <div class="stat-label">Пробежек на этой неделе</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="statStreak" style="color: #667eea;">0</div>
+                    <div class="stat-label">Дней подряд</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div class="success-message" id="successMessage">
+        <h3>🎉 Отлично!</h3>
+        <p id="successText">Цель достигнута!</p>
+    </div>
+
+    <script>
+        // Data storage
+        let data = {
+            water: 0,
+            savings: 0,
+            runningDays: [],
+            lastReset: new Date().toDateString(),
+            streak: 0
+        };
+
+        // Load data from localStorage
+        function loadData() {
+            const saved = localStorage.getItem('habitTracker');
+            if (saved) {
+                data = JSON.parse(saved);
+                // Reset daily data if new day
+                if (data.lastReset !== new Date().toDateString()) {
+                    data.water = 0;
+                    data.runningDays = [];
+                    data.lastReset = new Date().toDateString();
+                }
+            }
+            updateAllDisplays();
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('habitTracker', JSON.stringify(data));
+        }
+
+        // Water functions
+        function addWater(amount) {
+            data.water += amount;
+            if (data.water > 2500) data.water = 2500;
+            saveData();
+            updateWaterDisplay();
+            updateStats();
+            
+            if (data.water >= 2500) {
+                showSuccess('Ты выпил норму воды! 💧');
+                createConfetti();
+            }
+        }
+
+        function resetWater() {
+            data.water = 0;
+            saveData();
+            updateWaterDisplay();
+            updateStats();
+        }
+
+        function updateWaterDisplay() {
+            document.getElementById('waterAmount').textContent = data.water + ' мл';
+            const percentage = (data.water / 2500) * 100;
+            document.getElementById('waterProgress').style.width = percentage + '%';
+        }
+
+        // Savings functions
+        function addSavings() {
+            const input = document.getElementById('savingsInput');
+            const amount = parseFloat(input.value);
+            if (amount && amount > 0) {
+                data.savings += amount;
+                if (data.savings > 1000000) data.savings = 1000000;
+                input.value = '';
+                saveData();
+                updateSavingsDisplay();
+                updateStats();
+                
+                if (data.savings >= 1000000) {
+                    showSuccess('Ты достиг цели накоплений! ');
+                    createConfetti();
+                }
+            }
+        }
+
+        function resetSavings() {
+            data.savings = 0;
+            saveData();
+            updateSavingsDisplay();
+            updateStats();
+        }
+
+        function updateSavingsDisplay() {
+            document.getElementById('savingsAmount').textContent = data.savings.toLocaleString() + ' ₽';
+            const percentage = (data.savings / 1000000) * 100;
+            document.getElementById('savingsProgress').style.width = percentage + '%';
+        }
+
+        // Running functions
+        document.querySelectorAll('.day-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const day = parseInt(this.dataset.day);
+                if (this.classList.contains('active')) {
+                    this.classList.remove('active');
+                    data.runningDays = data.runningDays.filter(d => d !== day);
+                } else {
+                    this.classList.add('active');
+                    data.runningDays.push(day);
+                }
+                saveData();
+                updateRunningDisplay();
+                updateStats();
+                
+                if (data.runningDays.length >= 3) {
+                    showSuccess('Ты пробежал 3 раза на этой неделе! ');
+                    createConfetti();
+                }
+            });
+        });
+
+        function updateRunningDisplay() {
+            document.querySelectorAll('.day-card').forEach(card => {
+                const day = parseInt(card.dataset.day);
+                if (data.runningDays.includes(day)) {
+                    card.classList.add('active');
+                } else {
+                    card.classList.remove('active');
+                }
+            });
+            document.getElementById('runningCount').textContent = data.runningDays.length;
+        }
+
+        // Stats update
+        function updateStats() {
+            const waterPercent = Math.round((data.water / 2500) * 100);
+            const savingsPercent = Math.round((data.savings / 1000000) * 100);
+            
+            document.getElementById('statWater').textContent = waterPercent + '%';
+            document.getElementById('statSavings').textContent = savingsPercent + '%';
+            document.getElementById('statRunning').textContent = data.runningDays.length + '/3';
+            document.getElementById('statStreak').textContent = data.streak;
+        }
+
+        function updateAllDisplays() {
+            updateWaterDisplay();
+            updateSavingsDisplay();
+            updateRunningDisplay();
+            updateStats();
+        }
+
+        // Success message
+        function showSuccess(text) {
+            const msg = document.getElementById('successMessage');
+            document.getElementById('successText').textContent = text;
+            msg.classList.add('show');
+            setTimeout(() => {
+                msg.classList.remove('show');
+            }, 3000);
+        }
+
+        // Confetti effect
+        function createConfetti() {
+            const colors = ['#f77f00', '#fcbf49', '#52b788', '#00b4d8', '#667eea', '#ff6b6b'];
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 3000);
+            }
+        }
+
+        // Enter key for savings input
+        document.getElementById('savingsInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addSavings();
+            }
+        });
+
+        // Initialize
+        loadData();
+    </script>
+</body>
+</html>
